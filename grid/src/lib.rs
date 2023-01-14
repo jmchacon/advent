@@ -38,8 +38,9 @@ impl Location {
     }
 }
 
+/// An XxY grid of T
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
-struct Grid<T: Default + Clone> {
+pub struct Grid<T: Default + Clone> {
     g: Vec<Vec<T>>,
 }
 
