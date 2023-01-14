@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 /// Location defines an x,y coordinate
-pub struct Location(usize, usize);
+pub struct Location(pub usize, pub usize);
 
 impl Ord for Location {
     fn cmp(&self, other: &Self) -> Ordering {
