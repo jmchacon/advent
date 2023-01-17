@@ -42,6 +42,37 @@ impl Location {
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Grid<T: Default + Clone> {
     g: Vec<Vec<T>>,
+    width: usize,
+    height: usize,
+    cur: Option<Location>,
+}
+
+impl<'a, T: Default + Clone> Iterator for Grid<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let new = match self.cur.clone() {
+            Some(mut c) => {
+                c.0 += 1;
+                if c.0 >= self.width {
+                    c.0 = 0;
+                    c.1 += 1;
+                }
+                if c.1 >= self.height {
+                    None
+                } else {
+                    Some(c)
+                }
+            }
+            None => Some(Location(0, 0)),
+        };
+        self.cur = new;
+        if self.cur.is_none() {
+            None
+        } else {
+            Some(self.get(&self.cur.clone().unwrap()).clone())
+        }
+    }
 }
 
 impl<'a, T: Default + Clone> Grid<T> {
@@ -49,6 +80,9 @@ impl<'a, T: Default + Clone> Grid<T> {
     pub fn new(x: usize, y: usize) -> Self {
         Grid {
             g: vec![vec![T::default(); x]; y],
+            width: x,
+            height: y,
+            cur: None,
         }
     }
 
