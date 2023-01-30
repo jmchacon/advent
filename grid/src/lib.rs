@@ -44,21 +44,26 @@ pub struct Grid<T: Default + Clone> {
     g: Vec<Vec<T>>,
     width: usize,
     height: usize,
+}
+
+/// GridIter is the iterator for Grid
+pub struct GridIter<'a, T: Default + Clone> {
+    grid: &'a Grid<T>,
     cur: Option<Location>,
 }
 
-impl<'a, T: Default + Clone> Iterator for Grid<T> {
-    type Item = T;
+impl<'a, T: Default + Clone> Iterator for GridIter<'a, T> {
+    type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
         let new = match self.cur.clone() {
             Some(mut c) => {
                 c.0 += 1;
-                if c.0 >= self.width {
+                if c.0 >= self.grid.width {
                     c.0 = 0;
                     c.1 += 1;
                 }
-                if c.1 >= self.height {
+                if c.1 >= self.grid.height {
                     None
                 } else {
                     Some(c)
@@ -70,8 +75,17 @@ impl<'a, T: Default + Clone> Iterator for Grid<T> {
         if self.cur.is_none() {
             None
         } else {
-            Some(self.get(&self.cur.clone().unwrap()).clone())
+            Some(self.grid.get(&self.cur.as_ref().unwrap()))
         }
+    }
+}
+
+impl<'a, T: Default + Clone> IntoIterator for &'a Grid<T> {
+    type Item = &'a T;
+    type IntoIter = GridIter<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }
 
@@ -82,6 +96,13 @@ impl<'a, T: Default + Clone> Grid<T> {
             g: vec![vec![T::default(); x]; y],
             width: x,
             height: y,
+        }
+    }
+
+    /// `iter` gives a reference iterator to a Grid<T>
+    pub fn iter(&'a self) -> GridIter<'a, T> {
+        GridIter {
+            grid: self,
             cur: None,
         }
     }
@@ -108,7 +129,7 @@ impl<'a, T: Default + Clone> Grid<T> {
         &self.g[l.1][l.0]
     }
 
-    /// Return a mutable T from the given Location
+    /// Return the mutable T at the given Location
     pub fn get_mut(&'a mut self, l: &Location) -> &'a mut T {
         &mut self.g[l.1][l.0]
     }
