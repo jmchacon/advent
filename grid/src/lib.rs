@@ -53,7 +53,7 @@ pub struct GridIter<'a, T: Default + Clone> {
 }
 
 impl<'a, T: Default + Clone> Iterator for GridIter<'a, T> {
-    type Item = &'a T;
+    type Item = (Location, &'a T);
 
     fn next(&mut self) -> Option<Self::Item> {
         let new = match self.cur.clone() {
@@ -75,13 +75,16 @@ impl<'a, T: Default + Clone> Iterator for GridIter<'a, T> {
         if self.cur.is_none() {
             None
         } else {
-            Some(self.grid.get(&self.cur.as_ref().unwrap()))
+            Some((
+                self.cur.as_ref().unwrap().clone(),
+                self.grid.get(&self.cur.as_ref().unwrap()),
+            ))
         }
     }
 }
 
 impl<'a, T: Default + Clone> IntoIterator for &'a Grid<T> {
-    type Item = &'a T;
+    type Item = (Location, &'a T);
     type IntoIter = GridIter<'a, T>;
 
     fn into_iter(self) -> Self::IntoIter {
