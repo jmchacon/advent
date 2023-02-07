@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 /// Location defines an x,y coordinate
-pub struct Location(pub usize, pub usize);
+pub struct Location(pub isize, pub isize);
 
 impl Ord for Location {
     fn cmp(&self, other: &Self) -> Ordering {
@@ -59,11 +59,11 @@ impl<'a, T: Default + Clone> Iterator for GridIter<'a, T> {
         let new = match self.cur.clone() {
             Some(mut c) => {
                 c.0 += 1;
-                if c.0 >= self.grid.width {
+                if c.0 >= self.grid.width.try_into().unwrap() {
                     c.0 = 0;
                     c.1 += 1;
                 }
-                if c.1 >= self.grid.height {
+                if c.1 >= self.grid.height.try_into().unwrap() {
                     None
                 } else {
                     Some(c)
@@ -124,17 +124,17 @@ impl<'a, T: Default + Clone> Grid<T> {
 
     /// Replace the given Location with a new T
     pub fn add(&mut self, l: &Location, t: T) {
-        self.g[l.1][l.0] = t
+        self.g[l.1 as usize][l.0 as usize] = t
     }
 
     /// Return the T at the given Location
     pub fn get(&'a self, l: &Location) -> &'a T {
-        &self.g[l.1][l.0]
+        &self.g[l.1 as usize][l.0 as usize]
     }
 
     /// Return the mutable T at the given Location
     pub fn get_mut(&'a mut self, l: &Location) -> &'a mut T {
-        &mut self.g[l.1][l.0]
+        &mut self.g[l.1 as usize][l.0 as usize]
     }
 
     fn neighbors_impl(&'a self, l: &Location, all: bool) -> Vec<(Location, &T)> {
@@ -153,7 +153,7 @@ impl<'a, T: Default + Clone> Grid<T> {
             {
                 let x = t.0 as usize;
                 let y = t.1 as usize;
-                n.push((Location(x, y), &self.g[y][x]));
+                n.push((Location(t.0, t.1), &self.g[y][x]));
             }
         }
         n
