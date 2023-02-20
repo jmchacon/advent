@@ -39,6 +39,8 @@ impl Location {
 }
 
 /// An XxY grid of T
+///
+/// 0,0 is the upper left and projects rightward and down as coordinates advance.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Grid<T: Default + Clone> {
     g: Vec<Vec<T>>,
@@ -111,13 +113,13 @@ impl<'a, T: Default + Clone> Grid<T> {
     }
 
     /// The grid width.
-    /// NOTE: The grid is indexed from 0 so this is once past the last index.
+    /// NOTE: The grid is indexed from 0 so this is one past the last index.
     pub fn width(&self) -> usize {
         self.g[0].len()
     }
 
     /// The grid height.
-    /// NOTE: The grid is indexed from 0 so this is once past the last index.
+    /// NOTE: The grid is indexed from 0 so this is one past the last index.
     pub fn height(&self) -> usize {
         self.g.len()
     }
