@@ -1,5 +1,4 @@
 //! dayXX advent 20XX
-#[cfg_attr(feature = "cargo-clippy", allow(clippy::unwrap_used))]
 use clap::Parser;
 use color_eyre::eyre::Result;
 use grid::{Grid, Location};
