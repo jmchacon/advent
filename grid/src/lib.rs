@@ -174,7 +174,7 @@ impl<'a, T: Default + Clone> Grid<T> {
 
 /// Given a grid<T> print it out. This is not part of the main impl as it does put
 /// additional constraints on T that may not be needed in all cases.
-pub fn print_grid<T: Default + Clone + std::fmt::Debug + std::fmt::Display>(grid: &Grid<T>) {
+pub fn print_grid<T: Default + Clone + std::fmt::Display>(grid: &Grid<T>) {
     for g in grid {
         print!("{}", g.1);
         if usize::try_from(g.0 .0).unwrap() == grid.width() - 1 {
