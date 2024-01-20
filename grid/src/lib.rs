@@ -79,7 +79,7 @@ impl<'a, T: Default + Clone> Iterator for GridIter<'a, T> {
         } else {
             Some((
                 self.cur.as_ref().unwrap().clone(),
-                self.grid.get(&self.cur.as_ref().unwrap()),
+                self.grid.get(self.cur.as_ref().unwrap()),
             ))
         }
     }
@@ -140,8 +140,8 @@ impl<'a, T: Default + Clone> Grid<T> {
     }
 
     fn neighbors_impl(&'a self, l: &Location, all: bool) -> Vec<(Location, &T)> {
-        let x = l.0 as isize;
-        let y = l.1 as isize;
+        let x = l.0;
+        let y = l.1;
         let mut n = Vec::new();
         let mut tests = vec![(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)];
         if all {
@@ -170,4 +170,16 @@ impl<'a, T: Default + Clone> Grid<T> {
     pub fn neighbors_all(&'a self, l: &Location) -> Vec<(Location, &T)> {
         self.neighbors_impl(l, true)
     }
+}
+
+/// Given a grid<T> print it out. This is not part of the main impl as it does put
+/// additional constraints on T that may not be needed in all cases.
+pub fn print_grid<T: Default + Clone + std::fmt::Debug + std::fmt::Display>(grid: &Grid<T>) {
+    for g in grid {
+        print!("{}", g.1);
+        if usize::try_from(g.0 .0).unwrap() == grid.width() - 1 {
+            println!();
+        }
+    }
+    println!();
 }
