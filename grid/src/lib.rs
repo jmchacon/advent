@@ -36,6 +36,29 @@ impl Location {
     pub fn distance(&self, other: &Location) -> u32 {
         (self.0.abs_diff(other.0) + self.1.abs_diff(other.1)) as u32
     }
+
+    /// neighbors returns the NSWE Locations surrounding self. Unlike Grid there's
+    /// no filtering here because a standalone Location has no constraints.
+    pub fn neighbors(&self) -> Vec<Location> {
+        let n = vec![
+            Location(self.0 - 1, self.1),
+            Location(self.0 + 1, self.1),
+            Location(self.0, self.1 - 1),
+            Location(self.0, self.1 + 1),
+        ];
+        n
+    }
+
+    /// neighbors_all returns all 8 Locations surrounding self. Unlike Grid there's
+    /// no filtering here because a standalone Location has no constraints.
+    pub fn neighbors_all(&self) -> Vec<Location> {
+        let mut n = self.neighbors();
+        n.push(Location(self.0 - 1, self.1 - 1));
+        n.push(Location(self.0 - 1, self.1 + 1));
+        n.push(Location(self.0 + 1, self.1 - 1));
+        n.push(Location(self.0 + 1, self.1 + 1));
+        n
+    }
 }
 
 /// An XxY grid of T
